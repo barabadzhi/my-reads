@@ -16,23 +16,27 @@ export default class Bookshelf extends Component {
 
     return (
       <div className='bookshelf'>
-        <h2 className='bookshelf-title'>{title}</h2>
-        <div className='bookshelf-books'>
-          <ol className='books-grid'>
-            {books.map(book => (
-              <li key={book.id}>
-                <Book
-                  id={book.id}
-                  thumbnail={book.imageLinks.smallThumbnail}
-                  title={book.title}
-                  authors={book.authors}
-                  shelfType={type}
-                  onUpdate={onUpdateBook}
-                />
-              </li>
-            ))}
-          </ol>
-        </div>
+        {books.length ? (
+          <div>
+            <h2 className='bookshelf-title'>{title}</h2>
+            <div className='bookshelf-books'>
+              <ol className='books-grid'>
+                {books.map(book => (
+                  <li key={book.id}>
+                    <Book
+                      id={book.id}
+                      thumbnail={book.imageLinks.smallThumbnail}
+                      title={book.title}
+                      authors={book.authors}
+                      shelfType={type}
+                      onUpdate={onUpdateBook}
+                    />
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ) : null}
       </div>
     )
   }

@@ -37,6 +37,10 @@ body,
     padding: 0 10px 20px;
 }
 
+.bookshelf:empty {
+    display: none;
+}
+
 @media (min-width: 600px) {
     .bookshelf {
         padding: 0 20px 40px;
