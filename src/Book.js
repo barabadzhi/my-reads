@@ -3,23 +3,25 @@ import PropTypes from 'prop-types'
 
 export default class Book extends Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    shelfType: PropTypes.string
+    shelfType: PropTypes.string,
+    onUpdate: PropTypes.func
   }
 
   render () {
-    const { thumbnail, title, authors, shelfType } = this.props
+    const { id, thumbnail, title, authors, shelfType, onUpdate } = this.props
 
     return (
       <div className='book'>
         <div className='book-top'>
           <div className='book-cover' style={{ backgroundImage: `url(${thumbnail})` }} />
-          {shelfType && (
+          {shelfType && onUpdate && (
             <div className='book-shelf-changer'>
-              <select>
-                <option value='none' disabled>Move to...</option>
+              <select value='placeholder' onChange={(event) => { onUpdate({ id }, event.target.value) }}>
+                <option value='placeholder' disabled>Move to...</option>
                 {[
                   { value: 'currentlyReading', text: 'Currently Reading' },
                   { value: 'wantToRead', text: 'Want to Read' },
