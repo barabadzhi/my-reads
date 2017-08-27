@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import sortBy from 'sort-by'
 
-import Book from './Book'
+import Bookshelf from './Bookshelf'
 
 export default class ListBooks extends Component {
   static propTypes = {
@@ -19,63 +18,18 @@ export default class ListBooks extends Component {
         </div>
         <div className='list-books-content'>
           <div>
-            <div className='bookshelf'>
-              <h2 className='bookshelf-title'>Currently Reading</h2>
-              <div className='bookshelf-books'>
-                <ol className='books-grid'>
-                  {books
-                    .filter(book => book.shelf === 'currentlyReading')
-                    .sort(sortBy('title'))
-                    .map(book => (
-                      <li key={book.id}>
-                        <Book
-                          thumbnail={book.imageLinks.smallThumbnail}
-                          title={book.title}
-                          authors={book.authors}
-                        />
-                      </li>
-                    ))}
-                </ol>
-              </div>
-            </div>
-            <div className='bookshelf'>
-              <h2 className='bookshelf-title'>Want to Read</h2>
-              <div className='bookshelf-books'>
-                <ol className='books-grid'>
-                  {books
-                    .filter(book => book.shelf === 'wantToRead')
-                    .sort(sortBy('title'))
-                    .map(book => (
-                      <li key={book.id}>
-                        <Book
-                          thumbnail={book.imageLinks.smallThumbnail}
-                          title={book.title}
-                          authors={book.authors}
-                        />
-                      </li>
-                    ))}
-                </ol>
-              </div>
-            </div>
-            <div className='bookshelf'>
-              <h2 className='bookshelf-title'>Read</h2>
-              <div className='bookshelf-books'>
-                <ol className='books-grid'>
-                  {books
-                    .filter(book => book.shelf === 'read')
-                    .sort(sortBy('title'))
-                    .map(book => (
-                      <li key={book.id}>
-                        <Book
-                          thumbnail={book.imageLinks.smallThumbnail}
-                          title={book.title}
-                          authors={book.authors}
-                        />
-                      </li>
-                    ))}
-                </ol>
-              </div>
-            </div>
+            <Bookshelf
+              title='Currently Reading'
+              books={books.filter(book => book.shelf === 'currentlyReading')}
+            />
+            <Bookshelf
+              title='Want to Read'
+              books={books.filter(book => book.shelf === 'wantToRead')}
+            />
+            <Bookshelf
+              title='Read'
+              books={books.filter(book => book.shelf === 'read')}
+            />
           </div>
         </div>
         <div className='open-search'>
