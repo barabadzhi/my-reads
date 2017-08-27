@@ -23,11 +23,20 @@ export default class MyReads extends Component {
   }
 
   updateBook = (book, shelf) => {
+    let bookIdx
+    let books = this.state.books.slice()
+
     const bookOnShelf = { ...this.state.books
-      .filter(({ id }) => id === book.id)
-      .pop()
+      .filter(({ id }, idx) => {
+        if (id === book.id) {
+          bookIdx = idx
+          return true
+        }
+        return false
+      })[0]
     }
 
+    books.splice(bookIdx, 1)
     bookOnShelf.shelf = shelf
 
     BooksAPI
@@ -35,10 +44,8 @@ export default class MyReads extends Component {
       .then(() => {
         this.setState(state => ({
           books: shelf === 'none'
-            ? state.books
-              .filter(({ id }) => id !== book.id)
-            : state.books
-              .filter(({ id }) => id !== book.id)
+            ? books
+            : books
               .concat([ bookOnShelf ])
               .sort(sortBy('title'))
         }))
