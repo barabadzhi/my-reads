@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
+import update from 'immutability-helper'
 import sortBy from 'sort-by'
 
 import ListBooks from './ListBooks'
@@ -10,7 +11,8 @@ import './App.css'
 
 export default class MyReads extends Component {
   state = {
-    books: []
+    books: [],
+    searchResults: []
   }
 
   componentDidMount () {
@@ -23,49 +25,52 @@ export default class MyReads extends Component {
   }
 
   updateBook = (book, shelf) => {
-    let bookIdx
-    let books = this.state.books.slice()
+    const { books } = this.state
+    const bookIdx = books.findIndex(({ id }) => id === book.id)
 
-    const bookOnShelf = { ...this.state.books
-      .filter(({ id }, idx) => {
-        if (id === book.id) {
-          bookIdx = idx
-          return true
-        }
-        return false
-      })[0]
-    }
-
-    books.splice(bookIdx, 1)
-    bookOnShelf.shelf = shelf
+    const bookOnShelf = update(books[bookIdx], {
+      shelf: { $set: shelf }
+    })
 
     BooksAPI
       .update(book, shelf)
       .then(() => {
-        this.setState(state => ({
-          books: shelf === 'none'
-            ? books
-            : books
-              .concat([ bookOnShelf ])
-              .sort(sortBy('title'))
-        }))
+        this.setState(shelf === 'none'
+          ? update(this.state, { books: { $splice: [[bookIdx, 1]] } })
+          : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }) })
+      })
+  }
+
+  searchBook = (query, maxResults = 20) => {
+    BooksAPI
+      .search(query, maxResults)
+      .then(searchResults => {
+        this.setState({
+          searchResults: Array.isArray(searchResults) ? searchResults : []
+        })
       })
   }
 
   render () {
+    const { books, searchResults } = this.state
+
     return (
       <div className='my-reads'>
         <Route
           exact
           path='/'
           render={() => (<ListBooks
-            books={this.state.books}
+            books={books}
             onUpdateBook={this.updateBook}
           />)}
         />
         <Route
           path='/search'
-          component={SearchBook}
+          render={() => (<SearchBook
+            books={searchResults}
+            onSearch={this.searchBook}
+            onUpdateBook={this.updateBook} // TODO: Improve method to handle not in state { books } books
+          />)}
         />
       </div>
     )
