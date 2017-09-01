@@ -25,8 +25,9 @@ export default class MyReads extends Component {
   }
 
   updateBook = (book, shelf) => {
-    const { books } = this.state
+    const { books, searchResults } = this.state
     const bookIdx = books.findIndex(({ id }) => id === book.id)
+    const resultIdx = searchResults.findIndex(({ id }) => id === book.id)
 
     if (bookIdx === -1) {
       BooksAPI
@@ -50,9 +51,17 @@ export default class MyReads extends Component {
     BooksAPI
       .update(book, shelf)
       .then(() => {
-        this.setState(shelf === 'none'
-          ? update(this.state, { books: { $splice: [[bookIdx, 1]] } })
-          : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }) })
+        if (resultIdx === -1) {
+          this.setState(shelf === 'none'
+            ? update(this.state, { books: { $splice: [[bookIdx, 1]] } })
+            : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }) })
+        } else {
+          this.setState(shelf === 'none'
+            ? update(this.state, { books: { $splice: [[bookIdx, 1]] },
+              searchResults: { [resultIdx]: { shelf: { $set: 'none' } } } })
+            : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }),
+              searchResults: update(searchResults, { [resultIdx]: { shelf: { $set: bookOnShelf.shelf } } }) })
+        }
       })
   }
 
