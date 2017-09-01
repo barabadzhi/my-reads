@@ -21,19 +21,16 @@ export default class ListBooks extends Component {
         <div className='list-books-content'>
           <div>
             <Bookshelf
-              type='currentlyReading'
               title='Currently Reading'
               books={books.filter(book => book.shelf === 'currentlyReading')}
               onUpdateBook={onUpdateBook}
             />
             <Bookshelf
-              type='wantToRead'
               title='Want to Read'
               books={books.filter(book => book.shelf === 'wantToRead')}
               onUpdateBook={onUpdateBook}
             />
             <Bookshelf
-              type='read'
               title='Read'
               books={books.filter(book => book.shelf === 'read')}
               onUpdateBook={onUpdateBook}

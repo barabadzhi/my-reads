@@ -7,18 +7,18 @@ export default class Book extends Component {
     thumbnail: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    shelfType: PropTypes.string,
+    shelf: PropTypes.string,
     onUpdate: PropTypes.func
   }
 
   render () {
-    const { id, thumbnail, title, authors, shelfType, onUpdate } = this.props
+    const { id, thumbnail, title, authors, shelf, onUpdate } = this.props
 
     return (
       <div className='book'>
         <div className='book-top'>
           <div className='book-cover' style={{ backgroundImage: `url(${thumbnail})` }} />
-          {shelfType && onUpdate && (
+          {shelf && onUpdate && (
             <div className='book-shelf-changer'>
               <select value='placeholder' onChange={(event) => { onUpdate({ id }, event.target.value) }}>
                 <option value='placeholder' disabled>Move to...</option>
@@ -27,7 +27,7 @@ export default class Book extends Component {
                   { value: 'wantToRead', text: 'Want to Read' },
                   { value: 'read', text: 'Read' },
                   { value: 'none', text: 'None' }
-                ].filter(option => option.value !== shelfType).map(option => (
+                ].filter(option => option.value !== shelf).map(option => (
                   <option key={option.value} value={option.value}>{option.text}</option>
                 ))}
               </select>

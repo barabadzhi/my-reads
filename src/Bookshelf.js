@@ -5,14 +5,13 @@ import Book from './Book'
 
 export default class Bookshelf extends Component {
   static propTypes = {
-    type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     books: PropTypes.array.isRequired,
     onUpdateBook: PropTypes.func.isRequired
   }
 
   render () {
-    const { type, title, books, onUpdateBook } = this.props
+    const { title, books, onUpdateBook } = this.props
 
     return (
       <div className='bookshelf'>
@@ -28,7 +27,7 @@ export default class Bookshelf extends Component {
                       thumbnail={book.imageLinks.smallThumbnail}
                       title={book.title}
                       authors={book.authors}
-                      shelfType={type}
+                      shelf={book.shelf}
                       onUpdate={onUpdateBook}
                     />
                   </li>
