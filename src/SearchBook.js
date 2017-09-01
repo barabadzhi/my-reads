@@ -55,7 +55,7 @@ export default class SearchBook extends Component {
                     id={book.id}
                     thumbnail={book.imageLinks ? book.imageLinks.smallThumbnail : ''}
                     title={book.title}
-                    authors={book.authors ? book.authors : []}
+                    authors={book.authors}
                     shelf={book.shelf}
                     onUpdate={onUpdateBook}
                   />

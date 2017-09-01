@@ -6,7 +6,7 @@ export default class Book extends Component {
     id: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    authors: PropTypes.array.isRequired,
+    authors: PropTypes.array,
     shelf: PropTypes.string,
     onUpdate: PropTypes.func
   }
@@ -35,7 +35,7 @@ export default class Book extends Component {
           )}
         </div>
         <div className='book-title'>{title}</div>
-        <div className='book-authors'>{authors.sort().join(', ')}</div>
+        <div className='book-authors'>{authors ? authors.sort().join(', ') : ''}</div>
       </div>
     )
   }
