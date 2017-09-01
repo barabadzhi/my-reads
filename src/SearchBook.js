@@ -8,8 +8,8 @@ import Book from './Book'
 export default class SearchBook extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-    onSearch: PropTypes.func.isRequired
-    // onUpdateBook: PropTypes.func.isRequired
+    onSearch: PropTypes.func.isRequired,
+    onUpdateBook: PropTypes.func.isRequired
   }
 
   state = {
@@ -24,7 +24,7 @@ export default class SearchBook extends Component {
 
   render () {
     const { query } = this.state
-    const { books, onSearch } = this.props
+    const { books, onSearch, onUpdateBook } = this.props
 
     if (query) {
       onSearch(query)
@@ -47,18 +47,22 @@ export default class SearchBook extends Component {
           </div>
         </div>
         <div className='search-books-results'>
-          <ol className='books-grid'>
-            {books.length > 0 && books.map(book => (
-              <li key={book.id}>
-                <Book
-                  id={book.id}
-                  thumbnail={book.imageLinks ? book.imageLinks.smallThumbnail : ''}
-                  title={book.title}
-                  authors={book.authors ? book.authors : []}
-                />
-              </li>
-            ))}
-          </ol>
+          {books.length ? (
+            <ol className='books-grid'>
+              {books.map(book => (
+                <li key={book.id}>
+                  <Book
+                    id={book.id}
+                    thumbnail={book.imageLinks ? book.imageLinks.smallThumbnail : ''}
+                    title={book.title}
+                    authors={book.authors ? book.authors : []}
+                    shelfType={book.shelf}
+                    onUpdate={onUpdateBook}
+                  />
+                </li>
+              ))}
+            </ol>
+          ) : null}
         </div>
       </div>
     )

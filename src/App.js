@@ -28,6 +28,21 @@ export default class MyReads extends Component {
     const { books } = this.state
     const bookIdx = books.findIndex(({ id }) => id === book.id)
 
+    if (bookIdx === -1) {
+      BooksAPI
+        .update(book, shelf)
+        .then(() =>
+          BooksAPI
+            .get(book.id))
+        .then(book => {
+          this.setState(({ books }) => ({
+            books: books.concat([book]).sort(sortBy('title'))
+          }))
+        })
+
+      return
+    }
+
     const bookOnShelf = update(books[bookIdx], {
       shelf: { $set: shelf }
     })
@@ -45,9 +60,27 @@ export default class MyReads extends Component {
     BooksAPI
       .search(query, maxResults)
       .then(searchResults => {
-        this.setState({
-          searchResults: Array.isArray(searchResults) ? searchResults : []
-        })
+        const { books } = this.state
+
+        searchResults = Array.isArray(searchResults) ? searchResults.map(result => {
+          const book = books.find(({ id }) => id === result.id)
+
+          if (book && result.shelf) {
+            if (result.shelf === book.shelf) {
+              return result
+            }
+
+            result.shelf = book.shelf
+
+            return result
+          }
+
+          result.shelf = book ? book.shelf : 'none'
+
+          return result
+        }) : []
+
+        this.setState({ searchResults })
       })
   }
 
@@ -69,7 +102,7 @@ export default class MyReads extends Component {
           render={() => (<SearchBook
             books={searchResults}
             onSearch={this.searchBook}
-            onUpdateBook={this.updateBook} // TODO: Improve method to handle not in state { books } books
+            onUpdateBook={this.updateBook}
           />)}
         />
       </div>
