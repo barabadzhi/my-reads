@@ -20,16 +20,12 @@ export default class Book extends Component {
           <div className='book-cover' style={{ backgroundImage: `url(${thumbnail})` }} />
           {shelf && onUpdate && (
             <div className='book-shelf-changer'>
-              <select value='placeholder' onChange={(event) => { onUpdate({ id }, event.target.value) }}>
-                <option value='placeholder' disabled>Move to...</option>
-                {[
-                  { value: 'currentlyReading', text: 'Currently Reading' },
-                  { value: 'wantToRead', text: 'Want to Read' },
-                  { value: 'read', text: 'Read' },
-                  { value: 'none', text: 'None' }
-                ].filter(option => option.value !== shelf).map(option => (
-                  <option key={option.value} value={option.value}>{option.text}</option>
-                ))}
+              <select value={shelf} onChange={(event) => { onUpdate({ id }, event.target.value) }}>
+                <option disabled>Move to...</option>
+                <option value='currentlyReading'>Currently Reading</option>
+                <option value='wantToRead'>Want to Read</option>
+                <option value='read'>Read</option>
+                <option value='none'>None</option>
               </select>
             </div>
           )}

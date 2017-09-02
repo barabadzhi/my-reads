@@ -53,7 +53,7 @@ export default class MyReads extends Component {
       .then(() => {
         if (resultIdx === -1) {
           this.setState(shelf === 'none'
-            ? update(this.state, { books: { $splice: [[bookIdx, 1]] } })
+            ? { books: update(books, { $splice: [[bookIdx, 1]] }) }
             : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }) })
         } else {
           this.setState(shelf === 'none'
