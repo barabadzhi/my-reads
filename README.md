@@ -20,7 +20,7 @@ yarn install
 
 Run the app`*`:
 ```bash
-yarn install
+yarn start
 ```
 
 ## Searching for books
