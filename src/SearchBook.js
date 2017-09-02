@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import debounce from 'debounce'
 
 import Book from './Book'
 
@@ -16,19 +15,24 @@ export default class SearchBook extends Component {
     query: ''
   }
 
-  updateQuery = query => {
-    this.setState({
-      query: query.trim()
-    })
+  updateQuery = searchQuery => {
+    const { query } = this.state
+    const { onSearch } = this.props
+
+    searchQuery = searchQuery.trim()
+
+    if (query !== searchQuery) {
+      this.setState({ query: searchQuery })
+
+      if (searchQuery) {
+        onSearch(query)
+      }
+    }
   }
 
   render () {
     const { query } = this.state
-    const { books, onSearch, onUpdateBook } = this.props
-
-    if (query) {
-      onSearch(query)
-    }
+    const { books, onUpdateBook } = this.props
 
     return (
       <div className='search-books'>
@@ -42,7 +46,7 @@ export default class SearchBook extends Component {
               placeholder='Search by title or author'
               value={query}
               autoFocus
-              onChange={(event) => debounce(this.updateQuery(event.target.value), 260)}
+              onChange={(event) => { this.updateQuery(event.target.value) }}
             />
           </div>
         </div>

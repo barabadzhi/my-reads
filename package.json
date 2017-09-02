@@ -4,7 +4,6 @@
   "homepage": "https://hiseni.github.io/my-reads",
   "private": true,
   "dependencies": {
-    "debounce": "^1.0.2",
     "immutability-helper": "^2.3.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
