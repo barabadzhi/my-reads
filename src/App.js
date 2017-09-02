@@ -36,31 +36,34 @@ export default class MyReads extends Component {
           BooksAPI
             .get(book.id))
         .then(book => {
-          this.setState(({ books }) => ({
-            books: books.concat([book]).sort(sortBy('title'))
-          }))
+          if (resultIdx === -1) {
+            this.setState(({ books }) => ({
+              books: books.concat([book]).sort(sortBy('title'))
+            }))
+          } else {
+            this.setState(({ books, searchResults }) => ({
+              books: books.concat([book]).sort(sortBy('title')),
+              searchResults: update(searchResults, { [resultIdx]: { shelf: { $set: shelf } } })
+            }))
+          }
         })
 
       return
     }
-
-    const bookOnShelf = update(books[bookIdx], {
-      shelf: { $set: shelf }
-    })
 
     BooksAPI
       .update(book, shelf)
       .then(() => {
         if (resultIdx === -1) {
           this.setState(shelf === 'none'
-            ? { books: update(books, { $splice: [[bookIdx, 1]] }) }
-            : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }) })
+            ? update(this.state, { books: { $splice: [[bookIdx, 1]] } })
+            : update(this.state, { books: { [bookIdx]: { shelf: { $set: shelf } } } }))
         } else {
           this.setState(shelf === 'none'
             ? update(this.state, { books: { $splice: [[bookIdx, 1]] },
               searchResults: { [resultIdx]: { shelf: { $set: 'none' } } } })
-            : { books: update(books, { [bookIdx]: { $set: bookOnShelf } }),
-              searchResults: update(searchResults, { [resultIdx]: { shelf: { $set: bookOnShelf.shelf } } }) })
+            : update(this.state, { books: { [bookIdx]: { shelf: { $set: shelf } } },
+              searchResults: { [resultIdx]: { shelf: { $set: shelf } } } }))
         }
       })
   }
